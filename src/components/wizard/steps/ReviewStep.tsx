@@ -210,27 +210,28 @@ export function ReviewStep() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-[#E2E4E9] pt-6">
+      {/* نفس مبدأ الأزرار في باقي الخطوات: full width فوق بعض على
+          الموبايل — وده هنا كمان مهم إضافيًا عشان زر "إصدار الفاتورة"
+          يبقى سهل الضغط عليه بالإبهام على الموبايل */}
+      <div className="flex flex-col-reverse gap-3 border-t border-[#E2E4E9] pt-6 sm:flex-row sm:items-center sm:justify-between">
         <Button
           type="button"
           variant="outline"
           onClick={handlePreviousStep}
-          className="h-10 rounded-lg border border-[#E2E4E9] bg-slate-200/80 px-8 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-300"
+          className="h-10 w-full rounded-lg border border-[#E2E4E9] bg-slate-200/80 px-8 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-300 sm:w-auto"
         >
           السابق
         </Button>
-    
-    
-<Button
+
+        <Button
           type="submit"
           disabled={!canSubmit}
           title={!canSubmit ? "ليس لديك صلاحية إصدار الفواتير" : undefined}
-          className="h-10 rounded-lg bg-[#003D9B] px-8 font-tajawal text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#002D72] disabled:cursor-not-allowed disabled:opacity-50"
+          className="h-10 w-full rounded-lg bg-[#003D9B] px-8 font-tajawal text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#002D72] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {!canSubmit && <Lock className="ml-1.5 inline h-3.5 w-3.5" />}
           إصدار الفاتورة
         </Button>
-
       </div>
     </div>
   );

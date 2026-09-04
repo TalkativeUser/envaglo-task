@@ -70,7 +70,7 @@ export function BasicInfoStep() {
         </SectionTitle>
       </div>
 
-      <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:gap-x-8 md:grid-cols-2">
         {/* رقم الفاتورة */}
         <div className="space-y-2">
           <label htmlFor="invoiceNumber" className="block font-tajawal text-sm font-medium text-[#434654]">
@@ -115,7 +115,11 @@ export function BasicInfoStep() {
           <p className="block font-tajawal text-sm font-medium text-[#434654]">
             نوع الدفع
           </p>
-          <div className="flex h-11 items-center gap-6">
+          {/* كان flex h-11 (ارتفاع ثابت) + gap-6 من غير flex-wrap: على شاشة
+              ضيقة جدًا (أقل من ~340px) كان ممكن الخيارين يتزنقوا أو يعملوا
+              overflow. بقى min-h-11 (يتمدد لو احتاج) + flex-wrap + gap أصغر
+              على الموبايل. */}
+          <div className="flex min-h-11 flex-wrap items-center gap-4 sm:gap-6">
             <label className="flex cursor-pointer items-center gap-2.5">
               <input
                 type="radio"
@@ -123,7 +127,7 @@ export function BasicInfoStep() {
                 {...register("basicInfo.invoiceType")} // ربط الـ radio بنفس الـ field name
                 className="peer sr-only"
               />
-              <span className="relative flex h-4 w-4 items-center justify-center rounded-full border border-[#E2E4E9] after:hidden after:h-2 after:w-2 after:rounded-full after:bg-[#003D9B] after:content-[''] peer-checked:border-[#003D9B] peer-checked:after:block" />
+              <span className="relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#E2E4E9] after:hidden after:h-2 after:w-2 after:rounded-full after:bg-[#003D9B] after:content-[''] peer-checked:border-[#003D9B] peer-checked:after:block" />
               <span className="font-tajawal text-sm text-[#434654] peer-checked:font-bold peer-checked:text-[#191C1D]">
                 آجل (Credit)
               </span>
@@ -136,7 +140,7 @@ export function BasicInfoStep() {
                 {...register("basicInfo.invoiceType")}
                 className="peer sr-only"
               />
-              <span className="relative flex h-4 w-4 items-center justify-center rounded-full border border-[#E2E4E9] after:hidden after:h-2 after:w-2 after:rounded-full after:bg-[#003D9B] after:content-[''] peer-checked:border-[#003D9B] peer-checked:after:block" />
+              <span className="relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#E2E4E9] after:hidden after:h-2 after:w-2 after:rounded-full after:bg-[#003D9B] after:content-[''] peer-checked:border-[#003D9B] peer-checked:after:block" />
               <span className="font-tajawal text-sm text-[#434654] peer-checked:font-bold peer-checked:text-[#191C1D]">
                 نقدي (Cash)
               </span>
@@ -218,19 +222,21 @@ export function BasicInfoStep() {
         />
       </div>
 
-      {/* الأزرار (ملاحظة: زر "الخطوة التالية" يمكن ربطه بدالة تغيير الخطوة لاحقاً) */}
-      <div className="flex items-center justify-end gap-3 border-t border-[#E2E4E9] pt-6">
+      {/* الأزرار — كانت flex-row ثابتة (justify-end) فبتتزنق على الموبايل.
+          بقت بتترتب فوق بعض (full width) على الشاشات الضيقة، وترجع صف
+          واحد من sm فوق، زي أي action bar محترم على الموبايل. */}
+      <div className="flex flex-col-reverse gap-3 border-t border-[#E2E4E9] pt-6 sm:flex-row sm:items-center sm:justify-end">
         <Button
           type="button"
           variant="outline"
-          className="h-10 rounded-lg border border-[#E2E4E9] bg-white px-7 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-100"
+          className="h-10 w-full rounded-lg border border-[#E2E4E9] bg-white px-7 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-100 sm:w-auto"
         >
           إلغاء
         </Button>
         <Button
           type="button"
           onClick={handleNextStep}
-          className="h-10 rounded-lg bg-[#003D9B] px-7 font-tajawal text-sm font-semibold text-white transition-colors hover:bg-[#002D72]"
+          className="h-10 w-full rounded-lg bg-[#003D9B] px-7 font-tajawal text-sm font-semibold text-white transition-colors hover:bg-[#002D72] sm:w-auto"
         >
           الخطوة التالية
         </Button>

@@ -141,7 +141,7 @@ const formatFileSize = (bytes: number) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:gap-x-8 md:grid-cols-2">
         {/* مركز التكلفة */}
         <div className="space-y-2">
           <FieldLabel htmlFor="costCenterId" required>
@@ -246,9 +246,11 @@ const formatFileSize = (bytes: number) => {
       {/* المرفقات الداعمة */}
       <div className="space-y-3 border-t border-[#E2E4E9] pt-6">
         <p className="text-sm font-medium text-[#191C1D]">المرفقات الداعمة (اختياري)</p>
+        {/* بادينج كان كبير بشكل ثابت (px-6 py-10) على كل الشاشات، فعلى
+            الموبايل كان بياخد مساحة كبيرة أوي من غير داعي */}
         <label
           htmlFor="attachments"
-          className="flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#D5D8DE] bg-white px-6 py-10 text-center hover:border-[#003D9B]/50 hover:bg-[#F8F9FB]"
+          className="flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#D5D8DE] bg-white px-4 py-8 text-center hover:border-[#003D9B]/50 hover:bg-[#F8F9FB] sm:px-6 sm:py-10"
         >
           <input
             id="attachments"
@@ -306,19 +308,21 @@ const formatFileSize = (bytes: number) => {
 
       </div>
 
-      <div className="flex items-center justify-between border-t border-[#E2E4E9] pt-6">
+      {/* نفس مبدأ ترتيب الأزرار: full width فوق بعض على الموبايل، صف واحد
+          justify-between من sm فوق */}
+      <div className="flex flex-col-reverse gap-3 border-t border-[#E2E4E9] pt-6 sm:flex-row sm:items-center sm:justify-between">
         <Button
           type="button"
           variant="outline"
           onClick={handlePreviousStep}
-          className="h-10 rounded-lg border border-[#E2E4E9] bg-slate-200/80 px-8 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-300"
+          className="h-10 w-full rounded-lg border border-[#E2E4E9] bg-slate-200/80 px-8 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-300 sm:w-auto"
         >
           السابق
         </Button>
         <Button
           type="button"
           onClick={handleNextStep}
-          className="h-10 rounded-lg bg-[#003D9B] px-8 font-tajawal text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#002D72]"
+          className="h-10 w-full rounded-lg bg-[#003D9B] px-8 font-tajawal text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#002D72] sm:w-auto"
         >
           الخطوة التالية
         </Button>

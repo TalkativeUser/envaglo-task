@@ -188,20 +188,21 @@ export function ItemsStep() {
         />
       )}
 
-      {/* أزرار التنقل */}
-      <div className="flex items-center justify-between border-t border-[#E2E4E9] pt-6">
+      {/* أزرار التنقل — نفس مبدأ باقي الخطوات: full width فوق بعض على
+          الموبايل، صف واحد justify-between من sm فوق */}
+      <div className="flex flex-col-reverse gap-3 border-t border-[#E2E4E9] pt-6 sm:flex-row sm:items-center sm:justify-between">
         <Button
           type="button"
           variant="outline"
           onClick={handlePreviousStep}
-          className="h-10 rounded-lg border border-[#E2E4E9] bg-slate-200/80 px-8 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-300"
+          className="h-10 w-full rounded-lg border border-[#E2E4E9] bg-slate-200/80 px-8 font-tajawal text-sm font-medium text-[#434654] transition-colors hover:bg-slate-300 sm:w-auto"
         >
           السابق
         </Button>
         <Button
           type="button"
           onClick={handleNextStep}
-          className="h-10 rounded-lg bg-[#003D9B] px-8 font-tajawal text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#002D72]"
+          className="h-10 w-full rounded-lg bg-[#003D9B] px-8 font-tajawal text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#002D72] sm:w-auto"
         >
           الخطوة التالية
         </Button>
@@ -471,11 +472,15 @@ useEffect(() => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 m-0 p-0"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm transition-opacity duration-300"
       onClick={onClose}
     >
+      {/* الموديل كان w-full من غير أي مسافة حواليه، فعلى الموبايل كان
+          ملزوق تمامًا في حواف الشاشة. p-4 على الخلفية بقى بيدّي مسافة
+          تنفس حواليه، وارتفاعه بقى بيتكيف تلقائيًا (max-h-[90vh] +
+          overflow-y-auto موجودين بالفعل) */}
       <div 
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-300"
+        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl animate-in fade-in zoom-in duration-300 sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -534,8 +539,9 @@ useEffect(() => {
             )}
           </div>
 
-          {/* شبكة الحقول - صفين */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* شبكة الحقول — كانت عمودين ثابتين حتى على أصغر شاشة، بقت عمود
+              واحد على الموبايل الضيق وترجع عمودين من sm فوق */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* باركود الصنف */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-[#434654]">باركود الصنف</label>
@@ -599,20 +605,21 @@ useEffect(() => {
             />
           </div>
 
-          {/* أزرار الإجراء */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t">
+          {/* أزرار الإجراء — نفس مبدأ باقي الأزرار: full width فوق بعض
+              على الموبايل */}
+          <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-end">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="px-4 py-2 text-sm"
+              className="w-full px-4 py-2 text-sm sm:w-auto"
             >
               إلغاء
             </Button>
             <Button
               type="button"
               onClick={handleSubmit(onSubmitModal)}
-              className="flex items-center gap-2 bg-[#003D9B] text-white hover:bg-[#002D72] px-5 py-2 text-sm font-semibold rounded-lg"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#003D9B] px-5 py-2 text-sm font-semibold text-white hover:bg-[#002D72] sm:w-auto"
             >
               <CheckCircle2 className="h-4 w-4" />
               <span>إضافة المنتج للفاتورة</span>
