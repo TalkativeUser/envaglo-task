@@ -1,85 +1,111 @@
-# نظام إدارة الفواتير — Boilerplate مبسط
+# ERP Invoice Wizard
 
-نسخة أولية (structure) بس، من غير أي منطق عمل (logic) أو inputs. الهدف
-إنك تكمل عليها إنت بنفسك.
+![TypeScript](https://img.shields.io/badge/TypeScript-99.6%25-3178C6?logo=typescript&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black?logo=next.js)
+![Zod](https://img.shields.io/badge/validation-zod-3E67B1)
+![Zustand](https://img.shields.io/badge/state-zustand-orange)
 
-## التشغيل
+فورم إصدار فواتير على شكل Wizard من 4 خطوات (بيانات أساسية، بنود الفاتورة، اعتماد، مراجعة)، مبني على **Next.js App Router** مع **react-hook-form**، **zod** للـ validation، و**zustand** لإدارة الحالة.
 
-```bash
-npm install
-npm run dev
-```
+---
 
-الصفحة الرئيسية: `/` (لوحة التحكم) — الفورم: `/invoices/new`
-
-## هيكل المشروع
+## 📁 Structure
 
 ```
 src/
-  app/
-    layout.tsx                      # الـ layout الرئيسي (عربي + RTL)
-    (dashboard)/
-      layout.tsx                    # يجمع Sidebar + Header
-      page.tsx                      # صفحة الرئيسية (فاضية)
-      invoices/new/page.tsx         # صفحة إنشاء فاتورة (فاضية)
-
-  components/
-    layout/
-      Sidebar.tsx                   # قائمة جانبية ثابتة (شكل بس)
-      Header.tsx                    # هيدر ثابت (شكل بس)
-    wizard/
-      WizardContainer.tsx           # حاوية الـ Wizard (بدون state/تنقل حقيقي)
-      WizardStepper.tsx             # الخطوات (شكل بس، بدون منطق تنقل)
-      steps/
-        BasicInfoStep.tsx           # فاضية + تعليق بما يجب أن تحتويه
-        ItemsStep.tsx                # فاضية + تعليق
-        ApprovalStep.tsx             # فاضية + تعليق
-        ReviewStep.tsx                # فاضية + تعليق
-    ui/
-      button.tsx, card.tsx, badge.tsx, input.tsx, textarea.tsx,
-      label.tsx, select.tsx, dialog.tsx, table.tsx, separator.tsx,
-      skeleton.tsx                  # مكونات shadcn/ui جاهزة تستخدمها
-
-  lib/
-    rule-engine/
-      types.ts, evaluator.ts, wizard-config.ts   # كل ملف فيه تعليق بس
-    validation/schemas.ts             # تعليق بس
-    permissions/permissions.ts        # تعليق بس
-
-  hooks/
-    use-wizard-rules.ts, use-autosave.ts, use-permission.ts   # تعليق بس
-
-  store/
-    wizard-store.ts                   # تعليق بس
-
-  types/
-    invoice.ts                        # تعليق بس
+├── app/
+│   ├── layout.tsx                     # Root layout + Toaster
+│   ├── globals.css
+│   └── (dashboard)/
+│       ├── layout.tsx                 # Sidebar + Header
+│       ├── page.tsx                   # الصفحة الرئيسية
+│       └── invoices/
+│           └── new/
+│               └── page.tsx           # صفحة الويزارد
+│
+├── components/
+│   ├── common/
+│   │   └── Typography.tsx
+│   ├── layout/
+│   │   ├── Header.tsx
+│   │   └── Sidebar.tsx
+│   ├── ui/                            # shadcn primitives
+│   └── wizard/
+│       ├── WizardContainer.tsx        # الأورشستريتور الرئيسي
+│       ├── WizardStepper.tsx
+│       ├── AutoSaveIndicator.tsx
+│       ├── StatusBadge.tsx
+│       ├── InvoiceStatusBadge.tsx
+│       └── steps/
+│           ├── BasicInfoStep.tsx
+│           ├── ItemsStep.tsx
+│           ├── ApprovalStep.tsx
+│           └── ReviewStep.tsx
+│
+├── hooks/
+│   ├── use-autosave.ts
+│   ├── use-permission.ts
+│   └── use-wizard-rules.ts
+│
+├── lib/
+│   ├── api-client.ts                  # Mock API (submitInvoice, saveDraft)
+│   ├── invoice-calculations.ts
+│   ├── permissions.ts
+│   ├── rule-engine.ts
+│   ├── wizard-rules.config.ts
+│   └── wizard-schema.ts               # zod schema + superRefine
+│
+├── store/
+│   └── wizard-store.ts                # zustand store
+│
+└── types/
+    ├── api.ts
+    ├── invoice.ts
+    └── rules.ts
 ```
 
-## ملاحظات مهمة
+---
 
-- كل ملف فيه "منطق" (rule engine, validation, store, hooks) **فاضي تماماً**
-  وفيه تعليق عربي بيشرح المفروض يتكتب فيه إيه — إنت اللي هتكتب المنطق.
-- صفحات الـ Wizard (الخطوات الأربعة) **فاضية تماماً**، من غير أي inputs أو
-  selectors — إنت اللي هتضيفها.
-- `WizardStepper` شكل بس (خطوة نشطة ثابتة عن طريق prop)، من غير أي منطق
-  تنقل أو ربط بقواعد العمل.
-- `Sidebar` و `Header` شكل ثابت بس، مفيش بيانات حقيقية أو صلاحيات.
-- الـ dependencies (react-hook-form, zod, zustand) متسطبة في `package.json`
-  جاهزة تستخدمها لما تبدأ تكتب المنطق، من غير ما تحتاج تنزلها بنفسك.
+## 🧩 مصطلحات المشروع
 
-## shadcn/ui
+### Wizard Core
 
-فولدر `src/components/ui/` فيه مجموعة مكونات مكتوبة بنفس أسلوب وconventions
-shadcn/ui (Radix + class-variance-authority + `cn()`)، جاهزة تستخدمها في أي
-صفحة: `Button`, `Card`, `Badge`, `Input`, `Textarea`, `Label`, `Select`,
-`Dialog`, `Table`, `Separator`, `Skeleton`.
+| المصطلح | الوصف |
+|:--|:--|
+| `Wizard` | الفورم متعدد الخطوات (4 خطوات) |
+| `Step` / `StepId` | `basic-info` \| `items` \| `approval` \| `review` |
+| `Stepper` | الشريط العلوي لعرض الخطوات والتنقل بينها |
+| `completedSteps` | الخطوات اللي المستخدم خلّصها فعليًا (متخزنة في الـ store) |
+| `wizardFormValues` | نسخة من بيانات الفورم متخزنة في الـ store عشان متضيعش عند الـ navigation |
 
-فيه كمان `components.json` في جذر المشروع، فلو حبيت تجيب مكون إضافي مش
-موجود (زي `Toast` أو `Popover`)، تقدر تشغل على جهازك:
+### Rules & Validation
 
-```bash
-npx shadcn@latest add toast
-```
+| المصطلح | الوصف |
+|:--|:--|
+| `Rule Engine` | بيقيّم شروط ديناميكية زي "اظهار خطوة لو `total > 50000`" |
+| `visibleWhen` | شرط ظهور خطوة |
+| `requiredWhen` | شرط مطلوبية حقل (زي `dueDate` لو `invoiceType = credit`) |
+| `FieldRuleConfig` / `StepRuleConfig` | كونفيج القواعد الديناميكية |
 
-وهيتحط تلقائياً في نفس الفولدر بنفس الشكل.
+### API Layer
+
+| المصطلح | الوصف |
+|:--|:--|
+| `Mock Scenario` | `success` \| `validation` \| `conflict` \| `server-error` \| `unauthorized`، بتتحدد عبر `?mockScenario=` في الرابط |
+| `ApiError` | الكلاس الموحد لأخطاء الـ API |
+| `Auto-save` | حفظ تلقائي للمسودة كل 2 ثانية (debounce) |
+
+### Permissions
+
+| المصطلح | الوصف |
+|:--|:--|
+| `RBAC` / `permissions matrix` | صلاحيات كل دور (`sales`, `manager`) — `draft`, `submit`, `approve`, `reject` |
+
+---
+
+## ⚡ ملاحظات سريعة
+
+- الفورم كله فورم واحد (`FormProvider`)، وكل خطوة بتستخدم `useFormContext`
+- التحقق شامل schema واحد (`wizardFormSchema`) مع `superRefine` للحقول الديناميكية
+- استخدم `?mockScenario=success` في الرابط عشان تجرب نجاح الإصدار
+- الـ 409 العشوائي في `saveDraft` مقصود (8% احتمالية) — مش باج
