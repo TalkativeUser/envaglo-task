@@ -11,10 +11,10 @@ import {
   Users,
   BarChart3,
   HelpCircle,
-  Menu,
   X,
 } from "lucide-react";
 import { SubHeading, BodyText } from "@/components/common/Typography";
+import { useUIStore } from "@/store/ui-store";
 
 interface NavItem {
   label: string;
@@ -36,8 +36,10 @@ const navItems: NavItem[] = [
 export function Sidebar() {
   const pathname = usePathname();
 
-  // حالة فتح/قفل القائمة على الموبايل فقط — من lg فوق مش بتتستخدم خالص
-  const [isOpen, setIsOpen] = useState(false);
+  // حالة الفتح/القفل بقت جاية من ستور مشترك (useUIStore) بدل useState محلي،
+  // عشان زرار الـ hamburger في الـ Header يقدر يتحكم في نفس القائمة دي
+  const isOpen = useUIStore((s) => s.isSidebarOpen);
+  const closeSidebar = useUIStore((s) => s.closeSidebar);
 
   // الروابط اللي لسه href="#" (معندهاش صفحة حقيقية) بنتتبع آخر واحد
   // اتضغط عليه يدويًا عشان ياخد اللون الأزرق الفاتح برضه، زي أي زرار تاني
@@ -57,30 +59,22 @@ export function Sidebar() {
       setManualActiveLabel(null);
     }
     // على الموبايل، بعد ما تختار أي عنصر، اقفل القائمة تلقائيًا
-    setIsOpen(false);
+    closeSidebar();
   };
 
   const isHelpActive = manualActiveLabel === "المساعدة";
 
   return (
     <>
-      {/* زرار فتح القائمة — يظهر على الموبايل والتابلت بس، ومن lg فوق
-          بيختفي تمامًا لأن السايدبار بيبقى ظاهر وثابت زي ما هو */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-xl border border-[#E2E4E9] bg-white shadow-sm active:bg-[#ECEEF2] lg:hidden"
-        aria-label="فتح القائمة الجانبية"
-        aria-expanded={isOpen}
-      >
-        <Menu className="h-5 w-5 text-[#434654]" />
-      </button>
+      {/* زرار فتح القائمة بقى في الـ Header بدل ما يبقى هنا (floating)،
+          عشان يبقى في مكانه الطبيعي جنب باقي عناصر الهيدر. الستور
+          المشترك (useUIStore) هو اللي بيربط الاتنين ببعض. */}
 
       {/* خلفية شفافة تظهر خلف القائمة على الموبايل بس، وتقفلها لو ضغط عليها */}
       {isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-200 lg:hidden"
-          onClick={() => setIsOpen(false)}
+          onClick={closeSidebar}
           aria-hidden="true"
         />
       )}
@@ -95,7 +89,7 @@ export function Sidebar() {
         {/* زرار إغلاق داخلي — موبايل بس */}
         <button
           type="button"
-          onClick={() => setIsOpen(false)}
+          onClick={closeSidebar}
           className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg text-[#74777F] hover:bg-[#ECEEF2] lg:hidden"
           aria-label="إغلاق القائمة الجانبية"
         >
@@ -165,7 +159,7 @@ export function Sidebar() {
             onClick={(e) => {
               e.preventDefault();
               setManualActiveLabel("المساعدة");
-              setIsOpen(false);
+              closeSidebar();
             }}
             aria-current={isHelpActive ? "page" : undefined}
             className={`group flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 transition-all duration-150 ${
