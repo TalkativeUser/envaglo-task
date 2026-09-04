@@ -54,3 +54,7 @@ export function calculateItemTotals(input: ItemCalculationInput): ItemCalculatio
     totalAfterDiscountWithTax,
   };
 }
+
+export function isQuantityOverStock(quantity: number, availableStock: number): boolean {
+  return quantity > availableStock;
+}

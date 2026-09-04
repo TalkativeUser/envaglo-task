@@ -17,7 +17,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner"; // أو مكتبة التوست المتاحة لديك
-import { calculateItemTotals } from "@/lib/invoice-calculations";
+import { calculateItemTotals, isQuantityOverStock } from "@/lib/invoice-calculations";
 import { useFormContext, useFieldArray, useForm, useWatch } from "react-hook-form";
 
 // ==========================================
@@ -251,7 +251,7 @@ function ItemRow({ index, onRemove }: { index: number; onRemove: () => void }) {
     name: `itemsSection.items.${index}.totalAfterDiscountWithTax`,
   });
 
-  const isOverStock = quantity > stockQty;
+  const isOverStock = isQuantityOverStock(quantity, stockQty);
 
   return (
     <tr className="transition-colors hover:bg-slate-50/50">
